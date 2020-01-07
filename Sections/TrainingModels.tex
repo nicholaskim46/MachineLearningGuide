@@ -1,0 +1,356 @@
+\section{Training Models/Algorithms}
+
+\subsection{Linear Regression}
+
+\textit{Linear Regression} simply makes a prediction by computing a weighted sum of the input
+features, plus a constant term which is called the bias (Intercept)
+
+$$\hat{y} = \theta_{0} + \theta_{1}x_{1} \cdots + \theta_{n}x_{n}$$
+
+\noindent 
+In the equation above:
+\begin{itemize}
+    \item $\hat{y}$, is the predicted value
+    \item $n$, is the number of features
+    \item $x_{i}$, is the $i^{th}$ feature values
+    \item $\theta_{j}$ is the $j^{th}$ model parameter (including the bias term $\theta_{0}$
+    and the feature weights $\theta_{1}, \theta_{2}, \cdots, \theta_{n}$)
+\end{itemize}
+
+\noindent 
+However, this equation can be written much more concisely using a vectorized form:
+
+$$\hat{y} = \vec{h_{\theta}(x)} = \vec{\theta \cdot x}$$
+
+\noindent 
+Where we have the following:
+\begin{itemize}
+    \item $\vec{\theta}$, is the model's \textit{parameter vector}, conatining the bias term
+          $\theta_{0}$ and the feature weights $\theta_{1}$ to $\theta_{n}$.
+    \item $\vec{x}$, is the instance's \textit{feature vector}, containing $x_{0}$ to $x_{n}$
+          with $x_{0}$ always eqaul to 1.
+    \item $h_{\theta}$, is the hypothesis function, using the model parameters $\vec{\theta}$
+\end{itemize}
+
+\noindent
+Now for training the model we want to minimize the Mean Squared Error (MSE). This
+means that we need to find a value for $\vec{\theta}$ such that it minimizes the MSE. It is 
+also very common to see Root Mean Squared Error (RMSE) as a performance measure of a regression
+model. \\
+
+\noindent 
+The MSE of a Linear Regression is shown below:
+
+$$\text{MSE}(\vec{X}, h_{\theta}) = \frac{1}{m} \sum^{m}_{i = 1} (\vec{\theta}^{\intercal}\vec{x^{(i)}} - y^{(i)})^{2}$$
+
+\subsection{Gradient Descent}
+
+\textit{Gradient Descent} is a optimization algorithm capable of finding optimal 
+solutions to a wide range of problems. The general idea of this algorithm is to tweak parameters
+iteratively in order to minimize a cost function.\\
+
+\noindent 
+An intuitive way to think about Gradient Descent is imagine one is trying to find
+the fastest way to reach a bottom of a valley. A good strategy would be to go downhill in 
+the direction of the steepest slope. This is exactly what Gradient Descent does: it measures
+the local gradient of the error function with regard to the parameter vector $\vec{\theta}$,
+and it goes in the direction of the descending gradient. \\
+
+\noindent
+To implement \textit{Gradient Descent}, we need to compute the gradient of the cost function with
+regard to each model parameter $\theta_{j}$. Thus, we need to take the partial derivative of the 
+cost function with respect to each $\theta_{j}$. This can be seen below:
+
+$$\frac{\partial}{\partial \theta_{j}} \text{MSE}(\vec{\theta}) = \frac{2}{m} \sum^{m}_{i = 1} (\vec{\theta}^{\intercal} \vec{x}^{(i)} - y^{(i)}) x_{j}^{(i)}$$
+
+\noindent
+Additionally, instead of computing partial derivatives individually, we can also use the following
+equation to compute the gradient vector for MSE.
+
+$$
+\nabla_{\theta} \text{MSE}(\vec{\theta}) =  
+\begin{pmatrix}
+\frac{\partial}{\partial \theta_{0}} \text{MSE}(\vec{\theta}) \\ \\
+\frac{\partial}{\partial \theta_{1}} \text{MSE}(\vec{\theta}) \\ 
+\vdots \\ 
+\frac{\partial}{\partial \theta_{n}} \text{MSE}(\vec{\theta})
+\end{pmatrix}
+= \frac{2}{m}\vec{X}^{\intercal}(\vec{X}\theta - \vec{y})
+$$ \\
+
+\noindent
+Once we have the gradient vector, which points uphill, we just go in the opposite direction. This means
+that we need to subtract the $\nabla_{\theta}\text{MSE}(\theta)$ from $\theta$. Here we will use 
+$\eta$ as our learning rate parameter for each step. We will multiply the gradient vector by $\eta$ to 
+determine the size of the downhill step.
+
+$$\vec{\theta}^{(\text{next step})} = \theta - \eta \nabla_{\theta} \text{MSE}(\theta)$$ 
+
+\noindent
+From the equation above we can see how important $\eta$ is, when training optimizing training for 
+gradient descent. 
+
+\noindent
+Below will be important notes for Gradient Descent:
+
+\begin{itemize}
+    \item $\mathbf{\theta}$, this vector is initialized with random values
+    (\textit{Random Initialization}), and it is then improved gradually, taking one step at a
+    time to decrease the cost function.
+
+    \item \textbf{Learning Rate}, $\eta$, this parameter determines how large the "learning" will be in each
+    iteration of the algorithm. If the learning rate is too small then it will take too
+    long to converge to the desired state, and on the other hand, if it is too large then
+    the algorithm will never be able to converge as it will be bouncing around the cost
+    function. It is important to note that it is often optimal to set the learning rate dynamically so that
+    initially we have a high learning rate to get faster convergence to the optimal, and then slowly decrease
+    the learning rate as we get closer to the optimal point.
+
+    \item Finally, not all cost functions are bowl shaped. This means we can have cost functions
+    that have holes, ridges, plateaus, and all other forms of irregular terrain, making convergence
+    of this alorgithm difficult. However, this can be helped by the optimization of the learning rate.
+\end{itemize}
+
+\subsection{Polynomial Regression}
+
+\textit{Polynomial Regression}, can be done by adding powers to each feature, then training a linear
+on this set of extended features. Using Scikit-Learn's \mintinline{python}{PolynomialFeatures} class, we can
+transform our training data using the following code: \\
+
+\begin{minted}{python}
+from sklearn.preprocessing import PolynomialFeatures
+from sklearn.linear_model import LinearRegression
+
+m = 100
+X = 6 * np.random.rand(m, 1)
+y = 0.5 * X**2 + X + 2 + np.random.randn(m, 1)
+
+poly_features = PolynomialFeatures(degree=2, include_bias=False)
+X_poly = poly_features.fit_transform(X)
+
+lin_reg = LinearRegression()
+lin_reg.fit(X_poly, y)
+\end{minted} 
+
+\noindent
+\\ Now \mintinline{python}{X} is transformed into \mintinline{python}{X_poly} where it now contains the original features of \textbf{X}
+plus the squares of this feature (Also note that as we increase variables, this fuction will also include all
+the cross terms. For example, if we have variables \textit{a} and \textit{b} with degree=3, we add the features
+$a^{2}, a^{3}, b^{2}, b^{3}, ab, a^{2}b, ab^{2}$). We then fit the new features \mintinline{python}{X_poly} 
+with Scikit-Learns's \mintinline{python}{LinearRegression}, which returns us a quadratic polynomial regression. \\
+
+\noindent
+\textbf{Warning}: \textit{PolynomialFeatures(degree=d)} transforms an array continaing \textit{n} features into
+an array containing $\frac{(n+d)!}{d!n!}$ features. So we must take care in the explosion of the number of 
+features.
+
+\subsection*{Bias/Variance Trade Off}
+
+\begin{itemize}
+    \item \textbf{Bias}
+        \begin{itemize}
+            \item This part of the generalization error is due to wrong assumptions, 
+            such as assuming that the data is linear when it is actually quadratic. A 
+            high-bias model is most likely to underfit the training data.
+        \end{itemize}
+    \item \textbf{Variance}
+        \begin{itemize}
+            \item This part is due to the models excessive sensitivity to small variations
+                  training data. A model with many degrees of freedom (such as high-degree)
+                  polynomial model) is likely to have high variance and thus overfit the 
+                  training data.         
+        \end{itemize}
+    \item \textbf{Irreducible Error}
+        \begin{itemize}
+            \item This is due to the noisiness of data itself. The only way to reduce this
+                  part of the error is to clean up the data (e.g., fix the data sources,
+                  such as broken sensors, or detect and remove outliers)
+        \end{itemize}
+    \item Generally, increasing a model complexity till typically increase its variance
+          and reduce its bias. Conversely, reducing a model's complexity increases its bias
+          and reduces its variance. This is the reason for this so-called trade off
+    \item The optimal strategy would be to find the intersection that minimizes both the 
+          bias and variance.
+\end{itemize}
+
+\subsection{Regularized Linear Models}
+
+Regularizing linear models is a great way to reduce the chance of overfitting the data that
+it is using to be trained. This is the case as it helps reduce the amount of degrees of 
+freedom that the model has. \\
+
+\noindent 
+In this section we will take a look at three different regularized linear models: 
+Ridge Regression, LASSO, Elastic Net.
+
+\subsubsection{Ridge Regression}
+
+\textit{Ridge Regression}, is a regualrized linear regression with a regularization term
+eqaul to:  $\alpha \sum_{i=1}^{n} \theta_{i}^{2}$, which is then added to the cost function.
+This forces the algorithm to not only fit the data but to keep the models weights as small
+as possible. \\
+
+\noindent 
+It is important to note that we want to keep the regularization term during
+\textbf{training only} and once deployed, the regularization term should be dropped.\\
+
+\noindent 
+The hyperparameter $\alpha$ controls how much we want to regularize the model.
+If $\alpha = 0$ then the model is just a linear regression, however, if $\alpha$ is very
+large, then all the weights end up very close to zero. Where the result will be a flat line
+going through the data's mean.\\
+
+\noindent 
+Below will be the total cost function for Ridge Regression:
+
+$$J(\theta) = \text{MSE}(\theta) + \alpha \frac{1}{2} \sum_{i=1}^{n} \theta_{i}^{2}$$
+
+\noindent 
+Note that the biased term $\theta_{0}$ is not regularized (the sum starts at $i=1$, 
+not 0). If we define $\vec{w}$ as the vector of feature weights 
+($\theta_{1} \text{ to } \theta_{n}$), then the regularization term is equal to 
+$\frac{1}{2}(\norm{\vec{w}}_{2})^{2}$ represents the $l_{2}$ norm of the weight vector. \\ 
+
+\subsubsection*{Intuitive Explanation of $l_{2}$ norm}
+\noindent 
+The $l_{2}$ norm penalizes the square of the weights in the model. Therefore, it is much
+more inclined to push down the big weights as compared to the smaller weights. This is the reason why
+we see weights get pushed down close to zero for this model but never all the way to zero. \\
+
+\noindent 
+\textbf{Remember}, it is important to scale the data 
+(e.g., using \textit{StandardScaler} in Pythons Scikit-Learn) before performing Ridge Regression,
+as the model is sensitive to the scale of input features. This holds for most regularized models.
+
+\subsubsection{LASSO}
+
+\textit{Lease Absolute Shrinkage and Selection Operator Regression (LASSO)} is another version
+of a regularized version of Linear Regression: just like Ridge Regression, it adds a
+regularization term to the cost function, but it uses a $l_{1}$ norm of the weight vector
+instead of half the square of the $l_{2}$ norm. \\
+
+\noindent
+Below will be the LASSO Regression Cost Function:
+
+$$J(\vec{\theta}) = \text{MSE}(\vec{\theta}) + \alpha \sum_{i = 1}^{n} \abs{\theta_{i}}$$
+
+\noindent 
+A very important characteristic of Lasso Regression is that it tends to eliminate the 
+weights of the least important features (i.e., set them to zero). In other words, Lasso Regression
+automatically performs feature selection and outputs a \textit{sparse model} (i.e., with few
+nonzero weights).\\
+
+\subsubsection*{Intuitive Explanation of $l_{1}$ norm}
+\noindent 
+LASSO tends to send coefficients to zero because it tries to minimize the absolute value
+of the weights, thus it is inclined to make big weights smaller and small weights smaller as well. 
+Therefore, it tends to drive the weights to 0, which then brings upon a sparse weight vector.
+
+\subsubsection{Elastic Net}
+
+\textit{Elastic Net} is the middle ground between Ridge Regression and Lasso Regression. The 
+regularization term is a simple mix of both Ridge and Lasso's regularization terms, and this can be 
+controlled with the mix ratio $r$. When $r = 0$, Elastic Net is equal to Ridge Regression, and when
+$r = 1$, it is equivalent to Lasso Regression. \\
+
+\noindent 
+Below will be the cost function for Elastic Net:
+
+$$J(\vec{\theta}) = \text{MSE}(\vec{\theta}) + r\alpha \sum_{i=1}^{n} \abs{\theta_{i}} + \frac{1-r}{2} \alpha \sum_{i=1}^{n} \theta_{i}^{2}$$
+
+\subsubsection{When to use Linear Regression, LASSO, Ridge, or Elastic Net?}
+
+It is almost always perferable to have at least a little bit of regularization, so generally,
+plain Linear Regression should be avoided. Ridge Regression, is usually a good default for solving
+linear problems, however, if we suspect that there may be only a few features that are useful, we 
+should prefer to use Lasso or Elastic Net. As discussed earlier, it is preferred to use Lasso or 
+Elastic Net when we want to try and reduce the least important features in a dataset to zero. \\
+
+\noindent 
+In general, Elastic Net is preferred over Lasso as sometimes the model can behave 
+erratically when the number of features is greater than the number of training instances or when
+several features are strongly correlated. 
+
+\subsection{Logistic Regression}
+
+\textit{Logistic Regression} (Also called \textit{Logit Regression}) is a regression that is
+commonly used to estimate the probability that an instance belongs to a particular class. If the 
+probability is greater than 50\%, then the model predicts that the instance belongs to that class
+and otherwise it does not. This trait makes it a \textit{binary classifier}.
+
+\subsubsection{Estimating Probabilities}
+
+Logistic Regression works just like a Linear Regression model, it computes a weighted sum of the
+input features (plus a bias term), but instead of outputting the result directly like the Linear
+Regression model, it outputs the \textit{logistic} of this result (See Below).
+
+$$\hat{p} = h_{\theta}(\vec{x}) = \sigma(\vec{x}^{\intercal}\vec{\theta})$$
+
+\noindent 
+The logistic -- noted $\sigma(\cdot)$ -- is a \textit{sigmoid function} (i.e., S-Shaped)
+that outputs a number between 0 and 1. It is defined below:
+
+$$\sigma(t) = \frac{1}{1 + \text{exp}(-t)}$$
+
+\noindent 
+Once the Logistic Regression model is able to estimate the probability $\hat{p} = h_{\theta}(\vec{x})$
+that an instance $\vec{x}$ belongs to the positive class, it can make the prediction for $\hat{y}$
+easily using the function below:
+
+\[ \hat{y} = 
+\begin{cases} 
+    0 & \text{if } \hat{p} < 0.5 \\
+    1 & \text{if } \hat{p} \geq  0.5 
+\end{cases}
+\] \\
+
+\noindent 
+\textbf{Note}: The score $t$ is often called the \textit{logit}. This comes from the 
+fact that the logit function is defined as $\text{logit}(p) = \text{log}(\frac{p}{1-p})$, this is
+the inverse of the logistic function. The logit is also called the \textit{log-odds}, since it is
+the log of the ratio between the estimated probability for the positive class and the estimated
+probability for the negative class.
+
+\subsubsection{Training and Cost Function}
+
+The objective of training a Logistic Regression is to set the parameter vector $\vec{\theta}$ so 
+that the model estimates high probabilities for positive instances ($y = 1$) and low probabilities
+for negative instances ($y = 0$). This idea is captured by the cost function shown below for a 
+single training instance $\vec{x}$:
+
+\[ c(\vec{\theta}) = 
+\begin{cases} 
+    \text{-log}(\hat{p}) & \text{if } y = 1 \\
+    \text{-log}(1 - \hat{p}) & \text{if } y = 0
+\end{cases}
+\] \\
+
+\noindent 
+Intuitively, we can see the cost function makes sense. As $t$ approaches 0 we can see that 
+$-\text{log}(t)$ grows very large, so the cost will be large if the model estimates a probability
+close to 0 for a positive instance, and it will also be very large if the model estimates a 
+probability close to 1 for a negative instance. On the other hand, we can see that the cost will
+be very small is the model is able to estimate the instance correctly. \\
+
+\noindent 
+The cost function over the whole training set is the average cost over all training 
+instances. It can be shown in a single expression called the \textit{log loss}, shown below:
+
+$$J(\vec{\theta}) = -\frac{1}{m} \sum_{i=1}^{m} [y^{(i)} \text{log}(\hat{p}^{(i)}) + (1-y^{(i)})\text{log}(1-\hat{p}^{(i)})]$$
+
+\noindent 
+There is no closed-form equation to compute the value of $\vec{\theta}$ that minimizes this
+cost function. However, this cost function is convex, so Gradient Descent (or other optimization
+algorithms) is guaranteed to find the global minimum.\\
+
+\noindent 
+The partial derivatives of the cost function w.r.t. the $j^{th}$ model parameter $\theta_{j}$
+is shown below:
+
+$$\frac{\partial}{\partial \theta_{j}} J(\vec{\theta}) = \frac{1}{m} \sum_{i=1}^{m} (\sigma(\vec{\theta}^{\intercal}\vec{x}^{(i)})-y^{(i)})\vec{x}_{j}^{(i)}$$
+
+\noindent 
+For each instance, it computes the prediction error and multiplies it by the $j^{th}$
+feature value, and then it computes the average over all training instances. Once we are able to get
+the gradient vector containing all the partial derivatives, we can use it in Batch Gradient Descent
+algorithm (So on with Stochastic Gradient Descent and Mini-batch Gradient Descent).

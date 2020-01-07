@@ -1,0 +1,106 @@
+
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+
+% Sets page size and margins
+\usepackage[letterpaper,top=3cm,bottom=3cm,left=3cm,right=3cm,marginparwidth=2cm]{geometry}
+\usepackage{setspace}
+
+% Code in Latex
+\usepackage[cache=false]{minted}
+\setminted[python]{frame=single, framesep=3mm}
+
+%% Useful packages
+\usepackage[justification=centering]{caption}
+\usepackage[font=scriptsize,labelfont=bf]{caption}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage[colorlinks=true, allcolors=black]{hyperref}
+\newcommand{\changeurlcolor}[1]{\hypersetup{urlcolor=#1}} 
+\usepackage{mathtools}
+\usepackage{commath}
+\usepackage[protrusion=true,expansion=true]{microtype}
+
+\renewcommand{\vec}[1]{\mathbf{#1}}
+\let\oldnorm\norm   % <-- Store original \norm as \oldnorm
+\let\norm\undefined % <-- "Undefine" \norm
+\DeclarePairedDelimiter\norm{\lVert}{\rVert}
+
+% ---------------------------------------------------------------
+% Do Not Change
+% ---------------------------------------------------------------
+\newcommand{\HRule}[1]{\rule{\linewidth}{#1}} 	% Horizontal rule
+\makeatletter							% Title
+\def\printtitle{%						
+    {\centering \@title\par}}
+\makeatother									
+
+\makeatletter							% Author
+\def\printauthor{%					
+    {\centering \large \@author}}				
+\makeatother
+% ---------------------------------------------------------------
+
+\title{	\normalsize \textsc{In The Working} 	% Subtitle
+		 	\\[2.0cm]								% 2cm spacing
+			\HRule{1pt} \\						% Upper rule
+			\LARGE \textbf{\uppercase{Machine Learning Overview}}	% Title
+			\HRule{2pt} \\ [0.5cm]		% Lower rule + 0.5cm spacing
+			\normalsize \today			% Todays date
+		}
+
+\author{
+		Nicholas Kim\\	
+		University College London\\	
+		MSc Computational Finance \\ 
+}
+
+\begin{document}
+
+\thispagestyle{empty}
+
+\printtitle
+        \vfill
+\printauthor
+\newpage
+
+\setcounter{page}{1}
+\section*{About}
+
+This will serve as a short guide to the many functions that can be found in Python's
+Scikit-Learn, TensorFlow and Keras libraries. I have created this document to hopefully 
+help others learn more about the area of Machine Learning and its capabilities. As a Note
+this paper, will not serve as a comprehensive guide to Machine Learning but more as a 
+cheat sheet to help one remember certain functions that are contained in the libraries 
+mentioned above. \\
+
+\noindent 
+This guide will continually be updated as libraries are changed and/or new 
+functions are added. I have also not gone through these libraries in full and will add 
+in what I have been able to cover so far. \\ 
+
+\noindent 
+Please feel free to reach out to me at 
+\href{mailto:Nicholaskim46@gmail.com}{Nicholaskim46@gmail.com} if there are any typos or
+mistakes throughout this guide.
+
+\pagebreak
+
+\tableofcontents
+
+\pagebreak
+
+\input{Sections/TrainingModels.tex}
+
+\input{Sections/Classification.tex}
+
+\input{Sections/SVM.tex}
+
+\input{Sections/EnsembleLearning.tex}
+
+\input{Sections/DimensionReduction.tex}
+
+\input{Sections/UnsupervisedLearning.tex}
+
+\end{document}

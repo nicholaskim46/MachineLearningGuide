@@ -1,0 +1,230 @@
+
+\section{Dimensionality Reduction}
+
+Many problems in Machine Learning involve thousands or even millions of features for each training instance.
+Having this many features often make training very slow and also make it much harder to find a good solution
+as well (Due to the \textit{Curse of Dimensionality}, will be explained more later). \\
+
+\noindent
+However, we are often able to reduce the number of features quite considerably, turning a rather complex 
+problem into something more simple and/or manageable. Although, we should take care in how we reduce dimensions
+as we do lose information with each dimension that we remove. So, if training isn't too slow, we should always
+first try to train the system with the original dataset before considering reducing dimensionality. \\
+
+\noindent 
+In addition, there are some cases where reducing dimensionality of the training data may filter out some noise
+and thus result in higher performance, but in general it will not increase performance and will only decrease
+the amount of time it will take to train the model.
+
+\subsection{Curse of Dimensionality}
+
+Given that we are living in 3-dimensional space (4th including time), our understanding of anything above
+3-dimensions is incredibly hard to grasp. It also turns out that many things behave very differently in 
+high-dimensional space (Please see below). \\
+
+\noindent
+\textbf{Expected Distance Between 2 Randomly Chosen Points in Different Dimensions}
+\begin{itemize}
+    \item \textbf{Unit Square}
+        \begin{itemize}
+            \item Distance on Average is roughly 0.52
+        \end{itemize}
+    \item \textbf{Unit 3D Cube}
+        \begin{itemize}
+            \item Distance on Average is roughly 0.66
+        \end{itemize}
+    \item \textbf{1 Million Dimensional Hypercube}
+        \begin{itemize}
+            \item Distance on Average is roughly 408.25 ($\sqrt{\frac{1,000,000}{6}}$)
+        \end{itemize}
+\end{itemize}
+
+\noindent
+Therefore, as a result of above, we can see that high-dimensional datasets are at risk of being very sparse:
+most training instances are likely to be far away from each other. This also means that a new instance will
+likely be far away from any training instance, making predictions much less reliable compared to a lower 
+dimensional model. \\
+
+\noindent
+In short, we see that the more dimensions we add, the higher the risk of overfitting the data with our model.
+
+\subsection{Main Approaches for Dimensionality Reduction}
+
+Before taking a look at specific algorithms to reduce dimensionality, it is important to first take a look at
+the two main approaches in reducing dimensionality: \textit{Projection} and \textit{Manifold Learning}.
+
+\subsubsection{Projection}
+
+In many cases we will find that the training data we will be using is not spread out uniformly across all
+dimensions. Many features will tend to be constant, while others may be highly correlated. Therefore, we find
+that many of the training instances lie within (or close to) a much lower-dimensional subspace of the 
+high-dimensional space. \\
+
+\noindent
+Generally, projection works best when the data we are trying to project to lower dimensions does not have too
+many twists and turns that may cause points to overlap each other when brought down to lower dimensions. A
+good example to see this will be using the \textit{Swiss Roll} dataset that can be found in Scikit-Learn's
+library.
+
+\subsubsection{Manifold Learning}
+
+In the previous section the \textit{Swiss Roll} data set was mentioned, this is an example of a 2D manifold.
+In layman's terms, a 2D manifold is a 2D shape that can be bent and twisted in a higher-dimensional space. More
+generally, a $d$-dimensional manifold is a part of an $n$-dimensional space where ($d < n$) that locally 
+resembles a d-dimensional hyperplane. In the case of the swiss roll, $d = 2$ and $n = 3$: thus, it locally
+resembles a 2D plane, but it is rolled in the third dimension. \\
+
+\noindent 
+In practice, many dimensionality reduction algorithms work by modeling the manifold on which the training
+instances lie; this is called \textit{manifold learning}. The prior relies on the \textit{manifold assumption},
+also known as the \textit{manifold hypothesis}, which holds that most real-world high-dimensional datasets lie
+close to a much lower-dimensional manifold. Empirically, this assumption is very commonly observed.
+
+\subsection{Principal Compenents Analysis (PCA)}
+
+\textit{Principal Components Analysis} or PCA, for short, is by far one of the most-popular dimensionality
+reduction algorithms. In its most basic terms, PCA identifies a hyperplane that lies closest to the data,
+and then it projects the data onto it.
+
+\subsubsection*{Principal Components}
+
+When projecting training data onto a lower-dimensional plane, it is important that we are choosing the correct
+hyperplane. The algorithm PCA identitifies the axis that accounts for the largest amount of variance in the 
+training set (Here variance can be thought of the amount of information captured from a single hyperplane
+that the training data is laying on). \\
+
+\noindent
+PCA finds as many axes as there are dimensions in the dataset, however, it does this is such a way where it finds
+the planes that contain the most amount of variance first and then they decrease in each component (Note, that 
+each component is orthogonal to each of the previous axes). \\ 
+
+\noindent
+Here we can say that the $i^{th}$ axis is the $i^{th}$ \textit{principal component} (PC) of the data. It is important
+to know that for each principal component, PCA finds a zero-centered unit vector pointing in the direction of the PC.
+Since two opposing unit vectors lie on the same axis, the direction of the unit vectors returned by PCA are inherently
+not stable. For example, if we were to peturb the training data slightly and run PCA on the data, the unit vectors 
+may point in the opposite direction as the original vectors in the non perturbed dataset. However, in the grand 
+scheme of things, this unstable chracteristic generally does not matter as the unit vectors, regardless of direction, 
+tend to lie on the same axes, therefore, the plane will be the same. \\
+
+\noindent
+PCA uses a standard matrix decomposition technique called \textit{Singular Value Decomposition} (SVD) that can
+decompose the training set matrix $\vec{X}$ into the matrix multiplication of three matrices 
+$\vec{U}\vec{\Sigma}\vec{V}^{\intercal}$, where $\vec{V}$ contains the unit vectors that define all the principal
+components that we are looking for, as shown below:
+
+$$\vec{V} =
+\begin{pmatrix}
+| & | &  & | \\
+\vec{c_{1}} & \vec{c_{2}} & \cdots & \vec{c_{n}} \\
+| & | &  & |
+\end{pmatrix}$$
+
+\noindent
+Below will be using NumPy's \mintinline{python}{svd()} function to obtain all the principal components of some given
+matrix $\vec{X}$:
+
+\begin{minted}{python}
+import numpy as np
+
+X_centered = X - X.mean(axis=0) # Centering Matrix
+U, s, Vt = np.linalg.svd(X_centered)
+c1 = Vt.T[:, 0] # First Principal Component
+c2 = Vt.T[:, 1] # Second Principal Component
+\end{minted}
+
+\noindent
+\textbf{Important}: PCA assumes that the dataset is centered around the origin. However, in Scikit-Learn's PCA classes,
+centering is automatically taken care of for you. But if you implement PCA yourself, or if you are using other libraries,
+\textbf{do not} forget to center the data first. 
+
+\subsubsection*{Projecting Down to d Dimensions}
+
+Once all principal components of a datset are identified, we can reduce the dimensionality of the dataset down to
+\textit{d} dimensions by projecting it onto the hyperplane defined by the first \textit{d} principal components. Selecting
+the first few hyperplanes will ensure that the projection we are doing will preserve the most variance as possible. \\
+
+\noindent
+To project the training set onto the hyperplane and obtain a reduced $\vec{X}_{d-proj}$ of dimensionality \textit{d},
+compute the matrix multiplication of the training set $\vec{X}$ by the matrix $\vec{W}_{d}$, defined as the matrix
+the matrix containing the first \textit{d} columns of $\vec{V}$, as shown below:
+
+$$\vec{X}_{d-proj} = \vec{X} \vec{W}_{d}$$
+
+\noindent
+The following Python code will be projecting the training set ($\vec{X}$) onto the plane defined by the first two
+principal components:
+
+\begin{minted}{python}
+W2 = Vt.T[:, :2]
+X2D = X_centered.dot(W2)
+\end{minted}
+
+\noindent
+Thus, that is how we can manually reduce dimensionality of a dataset down to any number of dimensions that we desire to
+acquire.
+
+\subsubsection*{Using Scikit-Learn for PCA}
+
+Scikit-Learn's \mintinline{python}{PCA} class uses SVD decomposition to implement PCA (as we have manually done before).
+The following code in this section will be covering how to use Scikit-Learns built-in PCA function.\\
+
+\noindent
+First we can import PCA in the following way (note that in Scikit-Learn centering is done automatically):
+
+\begin{minted}{python}
+from sklearn.decomposition import PCA
+
+pca = PCA(n_components=2) # Only want the first 2 principal components
+X2D = pca.fit_transform(X) # Projecting X down to 2 dimensions
+\end{minted}
+
+\noindent
+Further, after fitting the \mintinline{python}{PCA} transformer to the dataset, the attribute \mintinline{python}{components_}
+holds the transpose of $\vec{W}_{d}$ (e.g., the unit vector that defines the first principal component is equal to 
+\mintinline{python}{pca.components_.T[:, 0]}) \\
+
+\noindent
+A useful variable that is provided by Scikit-Learn's \mintinline{python}{PCA} class is the \mintinline{python}{explained_variance_ratio_}
+variable. This variable indicates the proportion of the dataset's variance that lies along each principal component.
+We can all the variable in the following way:
+
+\begin{minted}{python}
+pca.explained_variance_ratio_
+
+'''
+Example output for 2 principal compoenents would be:
+array([0.84248607, 0.14631839])
+'''
+\end{minted}
+
+\noindent
+Here that example output is telling us that 84\% of the dataset's variance lies along the first PC, and 14\% lies along
+the second PC. This leaves approximately 2\% of the variance to be in the rest of the PCs.
+
+\subsubsection*{Choosing the Right Number of Dimensions}
+
+In practice, we should not be arbitrarily choosing the numbers that we will want to reduce our dataset down to. Luckily,
+in Scikit-Learn's PCA class we are able to define the argument \mintinline{python}{n_components} to a number between
+0 and 1. For example, if we set the argument, \mintinline{python}{n_components} equal to 0.95, then we will be asking
+to return the number of components that preserve 95\% of the data's variance. Below will be an example of implementing
+this using Scikit-Learn:
+
+\begin{minted}{python}
+pca = PCA(n_components=0.95)
+X_reduced = pca.fit_transform(X_train)
+# Here X_train is just some random variable that is used for example 
+# purposes.
+\end{minted}
+
+\noindent
+\textbf{Note:} A very good dataset to see the benefits of PCA is applying it to the MNIST dataset (Can be found in Scikit-Learn)
+that has about 60,000 images of handwritten notes. One will find that using PCA we can preserve 95\% of the variance in
+that dataset even though we reduce the total dimensions down to just over 150 from 784 features (Almost less than 
+20\% of the original size of the dataset). 
+
+\subsection{Kernel PCA}
+
+\subsection{Locally Linear Embedding (LLE)}
+
+\subsection{Other Dimensionality Reduction Techniques}
