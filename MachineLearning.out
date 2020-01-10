@@ -27,22 +27,26 @@
 \BOOKMARK [2][-]{subsection.3.3}{Non-Linear SVM Classification}{section.3}% 27
 \BOOKMARK [3][-]{subsubsection.3.3.1}{Polynomial Kernel}{subsection.3.3}% 28
 \BOOKMARK [3][-]{subsubsection.3.3.2}{Gaussian RBF Kernel}{subsection.3.3}% 29
-\BOOKMARK [1][-]{section.4}{Random Forest/Ensemble Learning}{}% 30
-\BOOKMARK [2][-]{subsection.4.1}{Decision Trees}{section.4}% 31
-\BOOKMARK [2][-]{subsection.4.2}{Random Forests}{section.4}% 32
-\BOOKMARK [2][-]{subsection.4.3}{Voting Classifiers}{section.4}% 33
-\BOOKMARK [2][-]{subsection.4.4}{Bagging and Pasting}{section.4}% 34
-\BOOKMARK [2][-]{subsection.4.5}{Boosting}{section.4}% 35
-\BOOKMARK [2][-]{subsection.4.6}{Stacking}{section.4}% 36
-\BOOKMARK [1][-]{section.5}{Dimensionality Reduction}{}% 37
-\BOOKMARK [2][-]{subsection.5.1}{Curse of Dimensionality}{section.5}% 38
-\BOOKMARK [2][-]{subsection.5.2}{Main Approaches for Dimensionality Reduction}{section.5}% 39
-\BOOKMARK [3][-]{subsubsection.5.2.1}{Projection}{subsection.5.2}% 40
-\BOOKMARK [3][-]{subsubsection.5.2.2}{Manifold Learning}{subsection.5.2}% 41
-\BOOKMARK [2][-]{subsection.5.3}{Principal Compenents Analysis \(PCA\)}{section.5}% 42
-\BOOKMARK [2][-]{subsection.5.4}{Kernel PCA}{section.5}% 43
-\BOOKMARK [2][-]{subsection.5.5}{Locally Linear Embedding \(LLE\)}{section.5}% 44
-\BOOKMARK [2][-]{subsection.5.6}{Other Dimensionality Reduction Techniques}{section.5}% 45
-\BOOKMARK [1][-]{section.6}{Unsupervised Learning}{}% 46
-\BOOKMARK [2][-]{subsection.6.1}{Clustering}{section.6}% 47
-\BOOKMARK [2][-]{subsection.6.2}{Gaussian Mixtures}{section.6}% 48
+\BOOKMARK [1][-]{section.4}{Decision Trees}{}% 30
+\BOOKMARK [2][-]{subsection.4.1}{Training and Visualize a Decision Tree}{section.4}% 31
+\BOOKMARK [2][-]{subsection.4.2}{Making Predictions}{section.4}% 32
+\BOOKMARK [2][-]{subsection.4.3}{Estimating Class Probabilities}{section.4}% 33
+\BOOKMARK [2][-]{subsection.4.4}{The CART Training Algorithm}{section.4}% 34
+\BOOKMARK [2][-]{subsection.4.5}{Gini Impurity or Entropy?}{section.4}% 35
+\BOOKMARK [2][-]{subsection.4.6}{Regularization Hyperparameters}{section.4}% 36
+\BOOKMARK [2][-]{subsection.4.7}{Regression}{section.4}% 37
+\BOOKMARK [2][-]{subsection.4.8}{Instability}{section.4}% 38
+\BOOKMARK [1][-]{section.5}{Random Forest}{}% 39
+\BOOKMARK [2][-]{subsection.5.1}{Feature Importance}{section.5}% 40
+\BOOKMARK [1][-]{section.6}{Dimensionality Reduction}{}% 41
+\BOOKMARK [2][-]{subsection.6.1}{Curse of Dimensionality}{section.6}% 42
+\BOOKMARK [2][-]{subsection.6.2}{Main Approaches for Dimensionality Reduction}{section.6}% 43
+\BOOKMARK [3][-]{subsubsection.6.2.1}{Projection}{subsection.6.2}% 44
+\BOOKMARK [3][-]{subsubsection.6.2.2}{Manifold Learning}{subsection.6.2}% 45
+\BOOKMARK [2][-]{subsection.6.3}{Principal Compenents Analysis \(PCA\)}{section.6}% 46
+\BOOKMARK [2][-]{subsection.6.4}{Kernel PCA}{section.6}% 47
+\BOOKMARK [2][-]{subsection.6.5}{Locally Linear Embedding \(LLE\)}{section.6}% 48
+\BOOKMARK [2][-]{subsection.6.6}{Other Dimensionality Reduction Techniques}{section.6}% 49
+\BOOKMARK [1][-]{section.7}{Unsupervised Learning}{}% 50
+\BOOKMARK [2][-]{subsection.7.1}{Clustering}{section.7}% 51
+\BOOKMARK [2][-]{subsection.7.2}{Gaussian Mixtures}{section.7}% 52
